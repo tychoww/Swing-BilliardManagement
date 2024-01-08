@@ -93,10 +93,9 @@ public class frmLogin extends javax.swing.JFrame {
         // Thực hiện kiểm tra đăng nhập
         if (login(enteredEmail, enteredPassword)) {
             Account currentAccount = AccountDAO.getInstance().getAccountByEmail(enteredEmail);
-            frmTableManager f = new frmTableManager();
-            
-            this.setVisible(false);
-            f.setVisible(true);
+            // frmTableManager f = new frmTableManager(currentAccount);
+            this.dispose();
+            // f.setVisible(true);     
         } else {
             JOptionPane.showMessageDialog(null, "Sai tên tài khoản hoặc mật khẩu!");
         }

@@ -18,7 +18,7 @@ public class AccountDAO {
     public boolean login(String email, String passWord) {
         String query = "SELECT * FROM [Account] WHERE Email = ? AND Password = ?";
 
-        try (Connection connection = DataProvider.getConnection();
+        try (Connection connection = DbHelper.getConnection();
             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, email);
@@ -28,7 +28,6 @@ public class AccountDAO {
                 return resultSet.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException("Error while checking login.");
         }
     }
@@ -36,7 +35,7 @@ public class AccountDAO {
     public Account getAccountByEmail(String email) {
         String query = "SELECT * FROM [Account] WHERE Email = ?";
         
-        try (Connection connection = DataProvider.getConnection();
+        try (Connection connection = DbHelper.getConnection();
             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, email);
@@ -47,7 +46,6 @@ public class AccountDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException("Error getting account by email.");
         }
 
