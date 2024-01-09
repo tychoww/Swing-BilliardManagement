@@ -12,34 +12,34 @@ VALUES
   (N'Đồ uống');
 
 -- Chèn dữ liệu vào bảng [Table]
-INSERT INTO [Table] (TableName, Status)
+INSERT INTO [Table] (TableName, Price)
 VALUES 
-  (N'Bàn 1', 'available', 50000),
-  (N'Bàn 2', 'available', 50000),
-  (N'Bàn 3', 'available', 50000),
-  (N'Bàn 4', 'available', 50000),
-  (N'Bàn 5', 'available', 50000),
-  (N'Bàn 6', 'available', 50000),
-  (N'Bàn 7', 'available', 50000),
-  (N'Bàn 8', 'available', 50000),
-  (N'Bàn 9', 'available', 50000),
-  (N'Bàn 10', 'available', 50000),
-  (N'Bàn 11', 'available', 50000),
-  (N'Bàn 12', 'available', 50000),
-  (N'Bàn 13', 'available', 50000),
-  (N'Bàn 14', 'available', 50000),
-  (N'Bàn 15', 'available', 50000),
-  (N'Bàn 16', 'available', 50000),
-  (N'Bàn 17', 'available', 50000),
-  (N'Bàn 18', 'available', 50000),
-  (N'Bàn 19', 'available', 50000),
-  (N'Bàn 20', 'available', 50000);
+  (N'Bàn 1', 50000),
+  (N'Bàn 2', 50000),
+  (N'Bàn 3', 50000),
+  (N'Bàn 4', 50000),
+  (N'Bàn 5', 50000),
+  (N'Bàn 6', 50000),
+  (N'Bàn 7', 50000),
+  (N'Bàn 8', 50000),
+  (N'Bàn 9', 50000),
+  (N'Bàn 10', 50000),
+  (N'Bàn 11', 50000),
+  (N'Bàn 12', 50000),
+  (N'Bàn 13', 50000),
+  (N'Bàn 14', 50000),
+  (N'Bàn 15', 50000),
+  (N'Bàn 16', 50000),
+  (N'Bàn 17', 50000),
+  (N'Bàn 18', 50000),
+  (N'Bàn 19', 50000),
+  (N'Bàn 20', 50000);
 
 -- Chèn dữ liệu vào bảng [Account]
 INSERT INTO [Account] (Email, PassWord, Role)
 VALUES 
   (N'admin@gmail.com', 1, 'admin'),
-  (N'user@gmail.com', 1,'user');
+  (N'user@gmail.com', 1, 'user');
 
 -- Chèn dữ liệu vào bảng [Dish]
 INSERT INTO [Dish] (DishName, Price, CategoryID)

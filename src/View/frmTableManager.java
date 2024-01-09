@@ -1,17 +1,24 @@
 package View;
 
+import DAO.CategoryDAO;
+import DAO.DishDAO;
 import DAO.InvoiceDAO;
 import DAO.TableDAO;
 import DTO.Account;
+import DTO.Category;
+import DTO.Dish;
 import DTO.Invoice;
 import DTO.Table;
+import Helpers.CboCategoryItem;
+import Helpers.CboDishItem;
 import Helpers.DateTimeHelper;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -43,6 +50,7 @@ public final class frmTableManager extends javax.swing.JFrame {
         initComponents();
         // this.setCurrentAccount(acc);
         loadTable();
+        loadCategory();
     }
     
     @SuppressWarnings("unchecked")
@@ -74,8 +82,8 @@ public final class frmTableManager extends javax.swing.JFrame {
         txtTableTiming = new javax.swing.JFormattedTextField();
         txtTablePrice = new javax.swing.JFormattedTextField();
         jPanel7 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cboCategory = new javax.swing.JComboBox<>();
+        cboDish = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jSpinner1 = new javax.swing.JSpinner();
         scrollPane1 = new java.awt.ScrollPane();
@@ -116,7 +124,7 @@ public final class frmTableManager extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -224,7 +232,7 @@ public final class frmTableManager extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(btnOpenTable, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -234,39 +242,39 @@ public final class frmTableManager extends javax.swing.JFrame {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTableTiming)))
+                        .addComponent(txtTableTiming, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(95, 95, 95)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTablePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 27, Short.MAX_VALUE))
+                        .addComponent(txtTablePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtDateCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtTimeCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCloseTable)
-                        .addContainerGap())))
+                        .addComponent(txtDateCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCloseTable, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(245, 245, 245)
-                .addComponent(lblSelectedTable))
+                .addGap(310, 310, 310)
+                .addComponent(lblSelectedTable)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addComponent(lblSelectedTable)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtTimeCheckout)
-                    .addComponent(txtDateCheckin)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(txtTimeCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtDateCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnCloseTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnOpenTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnOpenTable, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtDateCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTimeCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCloseTable, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtDateCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTimeCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(23, 23, 23)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -278,9 +286,11 @@ public final class frmTableManager extends javax.swing.JFrame {
 
         jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboCategory.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboCategoryItemStateChanged(evt);
+            }
+        });
 
         jButton1.setText("Đặt món");
 
@@ -291,8 +301,8 @@ public final class frmTableManager extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jComboBox1, 0, 298, Short.MAX_VALUE)
-                    .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cboCategory, 0, 298, Short.MAX_VALUE)
+                    .addComponent(cboDish, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12)
                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -314,9 +324,9 @@ public final class frmTableManager extends javax.swing.JFrame {
                                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(26, 26, 26))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cboCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cboDish, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18))))))
         );
 
@@ -393,26 +403,55 @@ public final class frmTableManager extends javax.swing.JFrame {
             showMessageDialog(null, "Hãy chọn bàn!");
         } else {
             int tableID = tableSelected.getTableID();
-            List<Invoice> invoiceList = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
+            List<Invoice> invoiceList = InvoiceDAO.getInstance().getUnpaidInvoiceListByTableID(tableID);
             // Nếu inovoice của bàn này chưa tạo => tạo mới
             if(invoiceList.isEmpty()) {
                 InvoiceDAO.getInstance().createInvoice(tableID);
                 loadTable();
                 // Lấy lại danh sách invoice sau khi tạo mới
-                invoiceList = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
+                invoiceList = InvoiceDAO.getInstance().getUnpaidInvoiceListByTableID(tableID);
             }
-            txtDateCheckin.setText(invoiceList.get(0).getDateCheckin());
-//            txtTimeCheckin.setText(formattedTime);
+            LocalDateTime dateTimeCheckin = invoiceList.get(0).getDateCheckin();
+            txtDateCheckin.setText(DateTimeHelper.formatSqlDateShort(dateTimeCheckin));
+            txtTimeCheckin.setText(DateTimeHelper.formatSqlTimeShort(dateTimeCheckin));
         }
     }//GEN-LAST:event_btnOpenTableActionPerformed
+
+    private void cboCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboCategoryItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            CboCategoryItem selectedItem = (CboCategoryItem) cboCategory.getSelectedItem();
+            loadDishListByCategoryID(selectedItem.getValue());
+        }
+    }//GEN-LAST:event_cboCategoryItemStateChanged
     
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Methods">
+    
+    // <editor-fold defaultstate="collapsed" desc="Account">
     private void changeAccount(String role) {
         adminTableItem.setEnabled("admin".equals(role));
     }
+    // </editor-fold>
     
+    // <editor-fold defaultstate="collapsed" desc="Invoice">
+    private void resetDateField(boolean checkin, boolean checkout, boolean during) {
+        if (checkin) {
+            txtDateCheckin.setText("00/00/0000");
+            txtTimeCheckin.setText("00:00:00");
+        }
+        if (checkout) {
+            txtDateCheckout.setText("00/00/0000");
+            txtTimeCheckout.setText("00:00:00");
+        }
+        if (during) {
+            txtDateCheckout.setText("00/00/0000");
+            txtTimeCheckout.setText("00:00:00");
+        }
+    }
+    // </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Table">
     final void loadTable() {
         List<Table> tableList = TableDAO.getInstance().getAllTableList();
         for (Table item : tableList) {
@@ -420,14 +459,40 @@ public final class frmTableManager extends javax.swing.JFrame {
             btn.putClientProperty("tag", item); // Lưu data vào tag của button
             btn.setPreferredSize(new Dimension(TableDAO.TableWidth, TableDAO.TableHeight));
             btn.addActionListener((ActionEvent e) -> {
+                // Reset display
+                resetDateField(true, true, true);
+                
                 Table table = (Table) btn.getClientProperty("tag");
                 
                 // Logic khi click vào table
                 // Lưu dữ liệu vào label table để các components khác sử dụng
                 lblSelectedTable.putClientProperty("tag", table); 
+                
+                // Set table name
                 lblSelectedTable.setText(table.getTableName());
+                // Set table price
                 txtTablePrice.setText(Double.toString(table.getPrice()));
-
+                // Set date checkin
+                List<Invoice> invoiceList = InvoiceDAO.getInstance().getUnpaidInvoiceListByTableID(item.getTableID());
+                if (!invoiceList.isEmpty()) {
+                    LocalDateTime dateTimeCheckin = invoiceList.get(0).getDateCheckin();
+                    LocalDateTime dateTimeCheckout = invoiceList.get(0).getDateCheckout();
+                    
+                    if (dateTimeCheckin != null) {
+                        txtDateCheckin.setText(DateTimeHelper.formatSqlDateShort(dateTimeCheckin));
+                        txtTimeCheckin.setText(DateTimeHelper.formatSqlTimeShort(dateTimeCheckin));
+                    }
+                    if (dateTimeCheckout != null) {
+                        txtDateCheckout.setText(DateTimeHelper.formatSqlDateShort(dateTimeCheckout));
+                        txtTimeCheckout.setText(DateTimeHelper.formatSqlTimeShort(dateTimeCheckout));
+                    }
+                    if (dateTimeCheckin != null && dateTimeCheckout != null) {
+                        txtTableTiming.setText(DateTimeHelper.calculateDuration(dateTimeCheckin, dateTimeCheckout));
+                    }
+                    if (dateTimeCheckin != null && dateTimeCheckout == null) {
+                        txtTableTiming.setText(DateTimeHelper.calculateDuration(dateTimeCheckin, LocalDateTime.now()));
+                    }
+                }
             });
             switch (item.getStatus()) {
                 case "occupied" -> {
@@ -444,8 +509,32 @@ public final class frmTableManager extends javax.swing.JFrame {
                 }
             }
             flpTable.add(btn);
+        } 
+    }
+    // </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Category">
+    private void loadCategory() {
+        List<Category> categoryList = CategoryDAO.getInstance().getAllCategories();
+
+        for (Category item : categoryList) {
+            cboCategory.addItem(new CboCategoryItem(item.getCategoryName(), item.getCategoryID()));
         }
     }
+    // </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Dish">
+    void loadDishListByCategoryID(int categoryID) {
+        cboDish.removeAllItems();
+        
+        List<Dish> dishList = DishDAO.getInstance().getDishListByCategoryID(categoryID);
+        
+        for (Dish item : dishList) {
+            cboDish.addItem(new CboDishItem(item.getDishName(), item.getDishID()));
+        }
+    }
+
+    // </editor-fold>
     
     
     // </editor-fold>
@@ -487,11 +576,11 @@ public final class frmTableManager extends javax.swing.JFrame {
     private javax.swing.JMenu adminTableItem;
     private javax.swing.JButton btnCloseTable;
     private javax.swing.JButton btnOpenTable;
+    private javax.swing.JComboBox<CboCategoryItem> cboCategory;
+    private javax.swing.JComboBox<CboDishItem> cboDish;
     private javax.swing.JPanel flpTable;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

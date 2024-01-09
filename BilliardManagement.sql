@@ -39,8 +39,8 @@ CREATE TABLE [Invoice] (
   [InvoiceID] integer PRIMARY KEY IDENTITY(1, 1),
   [CustomerID] integer,
   [TableID] integer NOT NULL,
-  [DateCheckin] DATETIME DEFAULT (now()),
-  [DateCheckout] DATETIME DEFAULT (now()),
+  [DateCheckin] DATETIME DEFAULT (GETDATE()),
+  [DateCheckout] DATETIME,
   [Status] int NOT NULL DEFAULT (0),
   [TotalPrice] DECIMAL(10, 2)
 )

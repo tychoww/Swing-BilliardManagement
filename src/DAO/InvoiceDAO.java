@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.time.LocalDateTime;
 
 public class InvoiceDAO {
     private static InvoiceDAO instance;
@@ -43,8 +44,8 @@ public class InvoiceDAO {
                 int invoiceID = resultSet.getInt("InvoiceID");
                 int customerID = resultSet.getInt("CustomerID");
                 int tableID = resultSet.getInt("TableID");
-                String dateCheckin = resultSet.getString("DateCheckin");
-                String dateCheckout = resultSet.getString("DateCheckout");
+                LocalDateTime dateCheckin = resultSet.getTimestamp("DateCheckin").toLocalDateTime();
+                LocalDateTime dateCheckout = resultSet.getObject("DateCheckout") != null ? resultSet.getTimestamp("DateCheckout").toLocalDateTime() : null;
                 int status = resultSet.getInt("Status");
                 double totalPrice = resultSet.getDouble("TotalPrice");
 
@@ -58,7 +59,7 @@ public class InvoiceDAO {
         return invoiceList;
     }
     
-    public List<Invoice> getUnpaidInvoiceByTableID(int tableID) {
+    public List<Invoice> getUnpaidInvoiceListByTableID(int tableID) {
         List<Invoice> invoiceList = new ArrayList<>();
 
         String query = "SELECT * FROM [Invoice] WHERE TableID = ? AND Status=0;";
@@ -71,8 +72,8 @@ public class InvoiceDAO {
                 while (resultSet.next()) {
                     int invoiceID = resultSet.getInt("InvoiceID");
                     int customerID = resultSet.getInt("CustomerID");
-                    String dateCheckin = resultSet.getString("DateCheckin");
-                    String dateCheckout = resultSet.getString("DateCheckout");
+                    LocalDateTime dateCheckin = resultSet.getTimestamp("DateCheckin").toLocalDateTime();
+                    LocalDateTime dateCheckout = resultSet.getObject("DateCheckout") != null ? resultSet.getTimestamp("DateCheckout").toLocalDateTime() : null;
                     int status = resultSet.getInt("Status");
                     double totalPrice = resultSet.getDouble("TotalPrice");
 

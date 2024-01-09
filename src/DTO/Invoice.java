@@ -2,17 +2,18 @@ package DTO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 public class Invoice {
     private int InvoiceID;
     private int CustomerID;
     private int TableID;
-    private String DateCheckin;
-    private String DateCheckout;
+    private LocalDateTime DateCheckin;
+    private LocalDateTime DateCheckout;
     private int Status;
     private double TotalPrice;
 
-    public Invoice(int invoiceID, int customerID, int tableID, String dateCheckin, String dateCheckout, int status, double totalPrice) {
+    public Invoice(int invoiceID, int customerID, int tableID, LocalDateTime dateCheckin, LocalDateTime dateCheckout, int status, double totalPrice) {
         this.InvoiceID = invoiceID;
         this.CustomerID = customerID;
         this.TableID = tableID;
@@ -26,8 +27,8 @@ public class Invoice {
         this.InvoiceID = resultSet.getInt("InvoiceID");
         this.CustomerID = resultSet.getInt("CustomerID");
         this.TableID = resultSet.getInt("TableID");
-        this.DateCheckin = resultSet.getString("DateCheckin");
-        this.DateCheckout = resultSet.getString("DateCheckout");
+        this.DateCheckin = resultSet.getTimestamp("DateCheckin").toLocalDateTime();
+        this.DateCheckout = resultSet.getTimestamp("DateCheckout").toLocalDateTime();
         this.Status = resultSet.getInt("Status");
         this.TotalPrice = resultSet.getDouble("TotalPrice");
     }
@@ -56,19 +57,19 @@ public class Invoice {
         this.TableID = tableID;
     }
 
-    public String getDateCheckin() {
+    public LocalDateTime getDateCheckin() {
         return DateCheckin;
     }
 
-    public void setDateCheckin(String dateCheckin) {
+    public void setDateCheckin(LocalDateTime dateCheckin) {
         this.DateCheckin = dateCheckin;
     }
 
-    public String getDateCheckout() {
+    public LocalDateTime getDateCheckout() {
         return DateCheckout;
     }
 
-    public void setDateCheckout(String dateCheckout) {
+    public void setDateCheckout(LocalDateTime dateCheckout) {
         this.DateCheckout = dateCheckout;
     }
 
@@ -88,3 +89,4 @@ public class Invoice {
         this.TotalPrice = totalPrice;
     }
 }
+
