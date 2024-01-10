@@ -3,6 +3,7 @@ package View;
 import DAO.CategoryDAO;
 import DAO.DishDAO;
 import DAO.InvoiceDAO;
+import DAO.InvoiceDetailDAO;
 import DAO.TableDAO;
 import DTO.Account;
 import DTO.Category;
@@ -13,11 +14,15 @@ import Helpers.CboCategoryItem;
 import Helpers.CboDishItem;
 import Helpers.DateTimeHelper;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -26,29 +31,47 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
- * @author Tychow
+ * @author https://github.com/tychoww
  */
 public final class frmTableManager extends javax.swing.JFrame {
-//    private Account currentAccount;
-//    
-//    public Account getCurrentAccount() {
-//        return currentAccount;
-//    }
-//    
-//    public void setCurrentAccount(Account value) {
-//        currentAccount = value;
-//        changeAccount(currentAccount.getRole());
-//    }
+    private Account currentAccount; // Current user account
+   
+    /**
+     * Getter for the current user account.
+     * @return The current user account.
+     */
+    public Account getCurrentAccount() {
+        return currentAccount;
+    }
     
+    /**
+     * Setter for the current user account. Also triggers the `changeAccount` method.
+     * @param value The new current user account.
+     */
+    public void setCurrentAccount(Account value) {
+       currentAccount = value;
+       changeAccount(currentAccount.getRole());
+    }
+    
+    /**
+     * Constructor for `frmTableManager` that takes an `Account` parameter.
+     * Initializes the frame, sets the current account, and loads tables and categories.
+     * @param acc The user account associated with this frame.
+     */
 //    public frmTableManager(Account acc) {
 //        initComponents();
-//        // this.setCurrentAccount(acc);
+//        this.setCurrentAccount(acc);
 //        loadTable();
+//        loadCategory();
 //    }
     
+    /**
+     * Default constructor for `frmTableManager`.
+     * Initializes the frame, sets the current account to its current value, and loads tables and categories.
+     */
     public frmTableManager() {
         initComponents();
-        // this.setCurrentAccount(acc);
+        // this.setCurrentAccount(currentAccount);
         loadTable();
         loadCategory();
     }
@@ -68,7 +91,6 @@ public final class frmTableManager extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         lblSelectedTable = new javax.swing.JLabel();
         btnOpenTable = new javax.swing.JButton();
@@ -84,10 +106,12 @@ public final class frmTableManager extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         cboCategory = new javax.swing.JComboBox<>();
         cboDish = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jSpinner1 = new javax.swing.JSpinner();
+        btnAddDish = new javax.swing.JButton();
+        spinDishQuantiy = new javax.swing.JSpinner();
         scrollPane1 = new java.awt.ScrollPane();
         flpTable = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableInvoiceDetail = new javax.swing.JTable();
         tableManagementMenu = new javax.swing.JMenuBar();
         adminTableItem = new javax.swing.JMenu();
         accountTableItem = new javax.swing.JMenu();
@@ -99,6 +123,7 @@ public final class frmTableManager extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        jTextField1.setEditable(false);
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField1.setText("12120120102");
 
@@ -167,19 +192,6 @@ public final class frmTableManager extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
-        );
-
         jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lblSelectedTable.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -218,11 +230,11 @@ public final class frmTableManager extends javax.swing.JFrame {
 
         jLabel7.setText("Số tiền 1 giờ chơi:");
 
-        txtTableTiming.setBackground(new java.awt.Color(242, 242, 242));
+        txtTableTiming.setEditable(false);
         txtTableTiming.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT))));
         txtTableTiming.setText("00:00:00");
 
-        txtTablePrice.setBackground(new java.awt.Color(242, 242, 242));
+        txtTablePrice.setEditable(false);
         txtTablePrice.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txtTablePrice.setText("0");
 
@@ -292,7 +304,14 @@ public final class frmTableManager extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Đặt món");
+        btnAddDish.setText("Đặt món");
+        btnAddDish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddDishActionPerformed(evt);
+            }
+        });
+
+        spinDishQuantiy.setValue(1);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -304,9 +323,9 @@ public final class frmTableManager extends javax.swing.JFrame {
                     .addComponent(cboCategory, 0, 298, Short.MAX_VALUE)
                     .addComponent(cboDish, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12)
-                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spinDishQuantiy, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAddDish, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -315,13 +334,13 @@ public final class frmTableManager extends javax.swing.JFrame {
                 .addGap(7, 7, 7)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAddDish, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                         .addGap(0, 18, Short.MAX_VALUE)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(spinDishQuantiy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(26, 26, 26))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                                 .addComponent(cboCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -333,6 +352,19 @@ public final class frmTableManager extends javax.swing.JFrame {
         flpTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         flpTable.setLayout(new java.awt.GridLayout(7, 3));
         scrollPane1.add(flpTable);
+
+        tableInvoiceDetail.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Tên món", "Số lượng", "Đơn giá", "Thành tiền"
+            }
+        ));
+        jScrollPane1.setViewportView(tableInvoiceDetail);
 
         adminTableItem.setText("Admin");
         tableManagementMenu.add(adminTableItem);
@@ -363,10 +395,10 @@ public final class frmTableManager extends javax.swing.JFrame {
                 .addComponent(scrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -380,8 +412,8 @@ public final class frmTableManager extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -391,50 +423,185 @@ public final class frmTableManager extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     // <editor-fold defaultstate="collapsed" desc="Events">
+    /**
+     * Event: Logout AccountItem clicked.
+     * Description: Handles the action when the "Logout" menu item is clicked. 
+     *              Performs the following actions:
+     *              - Closes the current form.
+     *              - Opens the login form for the user to log in again.
+     */
     private void logoutAccountItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutAccountItemActionPerformed
         dispose();
         frmLogin f = new frmLogin();
         f.setVisible(true);
     }//GEN-LAST:event_logoutAccountItemActionPerformed
-
+    
+    /**
+     * Event: btnOpenTable (Open Table) button clicked.
+     * Description: Handles the action when the "Open Table" button is clicked.
+     *              Performs the following actions:
+     *              1. Checks if a table is selected.
+     *              2. If no table is selected, shows a message to select a table.
+     *              3. If a table is selected:
+     *                 a. Gets the ID of the selected table.
+     *                 b. Checks if there is an unpaid invoice for the selected table.
+     *                 c. If no invoice exists, creates a new invoice for the table.
+     *                 d. Changes the status of the table to "occupied" after successful creation.
+     *                 e. Updates the display status of the selected table.
+     *                 f. Retrieves the unpaid invoice for the selected table.
+     *              4. Sets the check-in date and time on the form based on the invoice information.
+     */
     private void btnOpenTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenTableActionPerformed
+        // Step 1: Check if a table is selected
         Table tableSelected = (Table) lblSelectedTable.getClientProperty("tag");
         if (tableSelected == null) {
             showMessageDialog(null, "Hãy chọn bàn!");
         } else {
+            // Step 2: Get the ID of the selected table
             int tableID = tableSelected.getTableID();
-            List<Invoice> invoiceList = InvoiceDAO.getInstance().getUnpaidInvoiceListByTableID(tableID);
-            // Nếu inovoice của bàn này chưa tạo => tạo mới
-            if(invoiceList.isEmpty()) {
+
+            // Step 3: Check if there is an unpaid invoice for the selected table
+            Invoice unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
+
+            // Step 3a: If no invoice exists, create a new invoice for the table
+            if (unpaidInvoice == null) {
                 InvoiceDAO.getInstance().createInvoice(tableID);
-                loadTable();
-                // Lấy lại danh sách invoice sau khi tạo mới
-                invoiceList = InvoiceDAO.getInstance().getUnpaidInvoiceListByTableID(tableID);
+
+                // Step 3b: Change the status of the table to "occupied" in databse
+                TableDAO.getInstance().changeStatusTable(tableID, "occupied");
+
+                // Step 3c: Update the display status of the selected table in Interface
+                changeTableStatus(tableID);
+
+                // Step 3d: Retrieve the unpaid invoice for the selected table
+                unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
             }
-            LocalDateTime dateTimeCheckin = invoiceList.get(0).getDateCheckin();
+
+            // Step 4: Set the check-in date and time on the form based on the invoice information
+            LocalDateTime dateTimeCheckin = unpaidInvoice.getDateCheckin();
             txtDateCheckin.setText(DateTimeHelper.formatSqlDateShort(dateTimeCheckin));
             txtTimeCheckin.setText(DateTimeHelper.formatSqlTimeShort(dateTimeCheckin));
         }
     }//GEN-LAST:event_btnOpenTableActionPerformed
-
+    
+    /**
+     * Event: cboCategory (Category ComboBox) item state changed.
+     * Description: Handles the action when the selected item in the category ComboBox changes.
+     *              Performs the following actions:
+     *              1. Checks if the item state change is due to selecting an item.
+     *              2. If an item is selected:
+     *                 a. Retrieves the selected category item from the ComboBox.
+     *                 b. Loads the list of dishes based on the selected category ID.
+     * @param evt ItemEvent representing the change in the state of the ComboBox item.
+     */
     private void cboCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboCategoryItemStateChanged
+        // Step 1: Check if the item state change is due to selecting an item
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            CboCategoryItem selectedItem = (CboCategoryItem) cboCategory.getSelectedItem();
-            loadDishListByCategoryID(selectedItem.getValue());
+            // Step 2: If an item is selected
+            // Step 2a: Retrieve the selected category item from the ComboBox
+            CboCategoryItem selectedCategoryItem = (CboCategoryItem) cboCategory.getSelectedItem();
+
+            // Step 2b: Load the list of dishes based on the selected category ID
+            loadDishListByCategoryID(selectedCategoryItem.getValue());
         }
     }//GEN-LAST:event_cboCategoryItemStateChanged
     
+    /**
+     * Event: btnAddDish (Add Dish Button) clicked.
+     * Description: Handles the action when the user adds a dish to a table. 
+     *              There are several scenarios:
+     * 
+     * - Scenario 1: The table does not have an existing invoice (Invoice):
+     *   + Create a new invoice for the table.
+     *   + Obtain the ID of the newly created invoice (Max Invoice ID).
+     *   + Insert an Invoice Detail based on the newly created invoice ID (Max Invoice ID).
+     * 
+     * - Scenario 2: The table already has an invoice:
+     *   + If the dish (Dish) already exists in the invoice detail, update the dish in the invoice detail.
+     *   + If the dish (Dish) does not exist in the invoice detail, insert the dish in the invoice detail.
+     * 
+     * - Finally, change the status of the table to "Occupied".
+     * - Update the interface of the table after adding the dish.
+     * 
+     * @param evt ActionEvent representing the user's action.
+     */
+    private void btnAddDishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDishActionPerformed
+        // The table data is stored in the object tag of lblSelectedTable
+        Table tableSelected = (Table) lblSelectedTable.getClientProperty("tag");
+
+        // If no table is selected
+        if (tableSelected == null) {
+            // Show notification: User must select a table before adding a dish
+            showMessageDialog(null, "Hãy chọn bàn!");
+        } else {
+            // Get the table ID from the selected table
+            int tableID = tableSelected.getTableID();
+            // Declare variables
+            int invoiceID, dishID, quantity;
+
+            // Retrieve the CboDishItem object stored in cboDish and store it in the selectedDishItem variable
+            CboDishItem selectedDishItem = (CboDishItem) cboDish.getSelectedItem();
+            // Assign values to variables
+            dishID = selectedDishItem.getValue();
+            quantity = (int) spinDishQuantiy.getValue();
+
+            // Retrieve unpaid invoices for the specified table ID
+            Invoice unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
+
+            // If unpaidInvoice is null, the table already has an invoice
+            if (unpaidInvoice == null) {
+                // Create a new invoice for the table
+                InvoiceDAO.getInstance().createInvoice(tableID);
+                // Obtain the ID of the newly created invoice (Max Invoice ID)
+                invoiceID = InvoiceDAO.getInstance().GetMaxInvoiceID();
+                // Add dishes to the invoice details of the newly created invoice
+                InvoiceDetailDAO.getInstance().addInvoiceDetail(invoiceID, dishID, quantity);
+            }
+            // If unpaidInvoice is not null, the table already has no invoice
+            else {
+                // Get the invoice ID of the selected table
+                invoiceID = unpaidInvoice.getInvoiceID();
+                // If this dish already exists in the invoice details, update the dish
+                if (InvoiceDetailDAO.getInstance().isExistingDishInInvoiceDetail(invoiceID, dishID)) {
+                    InvoiceDetailDAO.getInstance().updateInvoiceDetail(invoiceID, dishID, quantity);
+                }
+                // If this dish does not exist in the invoice details, insert the dish
+                else {
+                    InvoiceDetailDAO.getInstance().addInvoiceDetail(invoiceID, dishID, quantity);
+                }
+            }
+
+            // Change the status of the table to "Occupied" in the database
+            TableDAO.getInstance().changeStatusTable(tableID, "occupied"); 
+            // Update the status in the interface
+            changeTableStatus(tableID);
+        }
+    }//GEN-LAST:event_btnAddDishActionPerformed
+
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Methods">
     
     // <editor-fold defaultstate="collapsed" desc="Account">
+    /**
+     * Change the account role and update UI accordingly.
+     * 
+     * @param role The role of the account to be changed.
+     */
     private void changeAccount(String role) {
+        // Enable or disable the adminTableItem based on the role
         adminTableItem.setEnabled("admin".equals(role));
     }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Invoice">
+    /**
+     * Reset the date and time fields on the interface.
+     * 
+     * @param checkin  If true, reset the check-in date and time fields.
+     * @param checkout If true, reset the check-out date and time fields.
+     * @param during   If true, reset both check-in and check-out date and time fields.
+     */
     private void resetDateField(boolean checkin, boolean checkout, boolean during) {
         if (checkin) {
             txtDateCheckin.setText("00/00/0000");
@@ -452,32 +619,41 @@ public final class frmTableManager extends javax.swing.JFrame {
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Table">
+    /**
+     * Load table information into buttons and add them to the flpTable (FlowLayout) container.
+     * Each button represents a table and displays its name, status, and occupancy information.
+     */
     final void loadTable() {
+        // Retrieve a list of all tables from the database
         List<Table> tableList = TableDAO.getInstance().getAllTableList();
+
         for (Table item : tableList) {
             JButton btn = new JButton();
-            btn.putClientProperty("tag", item); // Lưu data vào tag của button
+            // Associate the Table object with the button using the "tag" property
+            btn.putClientProperty("tag", item);
             btn.setPreferredSize(new Dimension(TableDAO.TableWidth, TableDAO.TableHeight));
+
+            // Add ActionListener to handle button click events
             btn.addActionListener((ActionEvent e) -> {
-                // Reset display
+                // Reset display fields
                 resetDateField(true, true, true);
-                
+
+                // Get the associated Table object from the button's "tag"
                 Table table = (Table) btn.getClientProperty("tag");
-                
-                // Logic khi click vào table
-                // Lưu dữ liệu vào label table để các components khác sử dụng
-                lblSelectedTable.putClientProperty("tag", table); 
-                
-                // Set table name
+
+                // Set selected table name
                 lblSelectedTable.setText(table.getTableName());
+                lblSelectedTable.putClientProperty("tag", table);
+
                 // Set table price
                 txtTablePrice.setText(Double.toString(table.getPrice()));
-                // Set date checkin
-                List<Invoice> invoiceList = InvoiceDAO.getInstance().getUnpaidInvoiceListByTableID(item.getTableID());
-                if (!invoiceList.isEmpty()) {
-                    LocalDateTime dateTimeCheckin = invoiceList.get(0).getDateCheckin();
-                    LocalDateTime dateTimeCheckout = invoiceList.get(0).getDateCheckout();
-                    
+
+                // Set date check-in and date check-out if an unpaid invoice exists
+                Invoice unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(item.getTableID());
+                if (unpaidInvoice != null) {
+                    LocalDateTime dateTimeCheckin = unpaidInvoice.getDateCheckin();
+                    LocalDateTime dateTimeCheckout = unpaidInvoice.getDateCheckout();
+
                     if (dateTimeCheckin != null) {
                         txtDateCheckin.setText(DateTimeHelper.formatSqlDateShort(dateTimeCheckin));
                         txtTimeCheckin.setText(DateTimeHelper.formatSqlTimeShort(dateTimeCheckin));
@@ -494,6 +670,8 @@ public final class frmTableManager extends javax.swing.JFrame {
                     }
                 }
             });
+
+            // Customize button appearance based on table status
             switch (item.getStatus()) {
                 case "occupied" -> {
                     btn.setBackground(Color.decode("#FFB6C1"));
@@ -508,15 +686,72 @@ public final class frmTableManager extends javax.swing.JFrame {
                     btn.setText("<html>" + item.getTableName() + "<br>Trống</html>");
                 }
             }
+
+            // Add the button to the flpTable container
             flpTable.add(btn);
-        } 
+        }
+    }
+    
+    /**
+     * Find and return the JButton corresponding to the specified tableID from a list of buttons.
+     *
+     * @param buttons The list of buttons to search through.
+     * @param tableID The ID of the table associated with the button to be found.
+     * @return The JButton corresponding to the specified tableID, or null if not found.
+     */
+    private JButton findButtonByTableID(List<Component> buttons, int tableID) {
+        Optional<JButton> optionalButton = buttons.stream()
+                .filter(b -> b instanceof JButton)
+                .map(b -> (JButton) b)
+                .filter(b -> {
+                    Table table = (Table) b.getClientProperty("tag");
+                    return table != null && table.getTableID() == tableID;
+                })
+                .findFirst();
+
+        return optionalButton.orElse(null);
+    }
+    
+    /**
+    * Change the status and appearance of a table button based on its invoice status.
+    * If the table has an unpaid invoice, set the button background color to indicate it is occupied.
+    * If the table does not have an unpaid invoice, set the button background color to indicate it is available.
+    *
+    * @param tableID The ID of the table for which the status and appearance will be changed.
+    */
+    private void changeTableStatus(int tableID) {
+        // Step 1: Get the list of buttons in flpTable
+        Component[] components = flpTable.getComponents();
+        List<Component> buttonList = Arrays.asList(components);
+
+        // Step 2: Find the button corresponding to the specified tableID
+        JButton selectedButton = findButtonByTableID(buttonList, tableID);
+
+        // Step 3: Change the status and appearance of the button based on the table's invoice status
+        if (selectedButton != null) {
+            Table table = (Table) selectedButton.getClientProperty("tag");
+
+            Invoice unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
+            if (unpaidInvoice != null) {  // If the table has an unpaid invoice
+                selectedButton.setBackground(Color.decode("#FFB6C1"));
+                selectedButton.setText("<html>" + table.getTableName() + "<br>Có người</html>");
+            } else {  // If the table does not have an unpaid invoice
+                selectedButton.setBackground(Color.decode("#ADD8E6"));
+                selectedButton.setText("<html>" + table.getTableName() + "<br>Trống</html>");
+            }
+        }
     }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Category">
+    /**
+    * Load the list of categories from the database and populate them into the ComboBox.
+    */
     private void loadCategory() {
+        // Step 1: Retrieve the list of categories from the database
         List<Category> categoryList = CategoryDAO.getInstance().getAllCategories();
 
+        // Step 2: Populate the retrieved categories into the ComboBox
         for (Category item : categoryList) {
             cboCategory.addItem(new CboCategoryItem(item.getCategoryName(), item.getCategoryID()));
         }
@@ -524,18 +759,25 @@ public final class frmTableManager extends javax.swing.JFrame {
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Dish">
+    /**
+    * Load the list of dishes based on the specified category ID and populate them into the ComboBox.
+    * 
+    * @param categoryID The ID of the selected category for filtering dishes.
+    */
     void loadDishListByCategoryID(int categoryID) {
+        // Step 1: Remove all existing items from the ComboBox
         cboDish.removeAllItems();
-        
+
+        // Step 2: Retrieve the list of dishes from the database based on the specified category ID
         List<Dish> dishList = DishDAO.getInstance().getDishListByCategoryID(categoryID);
-        
+
+        // Step 3: Populate the retrieved dishes into the ComboBox
         for (Dish item : dishList) {
             cboDish.addItem(new CboDishItem(item.getDishName(), item.getDishID()));
         }
     }
 
     // </editor-fold>
-    
     
     // </editor-fold>
     
@@ -574,12 +816,12 @@ public final class frmTableManager extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu accountTableItem;
     private javax.swing.JMenu adminTableItem;
+    private javax.swing.JButton btnAddDish;
     private javax.swing.JButton btnCloseTable;
     private javax.swing.JButton btnOpenTable;
     private javax.swing.JComboBox<CboCategoryItem> cboCategory;
     private javax.swing.JComboBox<CboDishItem> cboDish;
     private javax.swing.JPanel flpTable;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -588,11 +830,10 @@ public final class frmTableManager extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
@@ -600,6 +841,8 @@ public final class frmTableManager extends javax.swing.JFrame {
     private javax.swing.JLabel lblSelectedTable;
     private javax.swing.JMenuItem logoutAccountItem;
     private java.awt.ScrollPane scrollPane1;
+    private javax.swing.JSpinner spinDishQuantiy;
+    private javax.swing.JTable tableInvoiceDetail;
     private javax.swing.JMenuBar tableManagementMenu;
     private javax.swing.JFormattedTextField txtDateCheckin;
     private javax.swing.JFormattedTextField txtDateCheckout;

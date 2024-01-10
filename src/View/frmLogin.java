@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package View;
 
 import DAO.AccountDAO;
@@ -10,7 +6,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Tychow
+ * @author https://github.com/tychoww
  */
 public class frmLogin extends javax.swing.JFrame {
     public frmLogin() {
@@ -79,25 +75,45 @@ public class frmLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     // <editor-fold defaultstate="collapsed" desc="Methods">
+    /**
+    * Authenticates the user based on the provided phone number and password.
+    *
+    * @param phoneNumber The phone number of the user.
+    * @param passWord     The password associated with the user account.
+    * @return True if authentication is successful, otherwise false.
+    */
     public boolean login(String phoneNumber, String passWord) {
         return AccountDAO.getInstance().login(phoneNumber, passWord);
     }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Events">
+    /**
+    * Handles the action performed event for the login button.
+    *
+    * @param evt The action event generated when the login button is clicked.
+    */
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // Lấy giá trị từ các ô nhập liệu
+        // Get values from input fields
         String enteredEmail = txtEmail.getText();
         String enteredPassword = txtPassWord.getText();
 
-        // Thực hiện kiểm tra đăng nhập
+        // Perform login check
         if (login(enteredEmail, enteredPassword)) {
+            // If login is successful, retrieve the account information
             Account currentAccount = AccountDAO.getInstance().getAccountByEmail(enteredEmail);
+
+            // Create an instance of frmTableManager, passing the current account
             // frmTableManager f = new frmTableManager(currentAccount);
+
+            // Close the current login frame
             this.dispose();
-            // f.setVisible(true);     
+
+            // Make the frmTableManager frame visible
+            // f.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(null, "Sai tên tài khoản hoặc mật khẩu!");
+            // If login fails, show an error message
+            JOptionPane.showMessageDialog(null, "Invalid username or password!");
         }
     }//GEN-LAST:event_btnLoginActionPerformed
     // </editor-fold>

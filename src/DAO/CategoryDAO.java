@@ -8,15 +8,36 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) class for managing Category entities.
+ * This class provides methods to retrieve category data from the database.
+ * It follows the singleton pattern to ensure a single instance.
+ * 
+ * @author https://github.com/tychoww
+ */
 public class CategoryDAO {
     private static CategoryDAO instance;
 
+    /**
+     * Gets the singleton instance of CategoryDAO.
+     *
+     * @return The singleton instance of CategoryDAO.
+     */
     public static CategoryDAO getInstance() {
         return instance == null ? (instance = new CategoryDAO()) : instance;
     }
 
+    /**
+     * Private constructor to enforce singleton pattern.
+     */
     private CategoryDAO() { }
 
+    /**
+     * Retrieves a list of all categories from the database.
+     *
+     * @return A list of Category objects representing categories.
+     * @throws RuntimeException if an error occurs while loading category data.
+     */
     public List<Category> getAllCategories() {
         List<Category> categoryList = new ArrayList<>();
 
