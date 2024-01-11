@@ -166,4 +166,26 @@ public class InvoiceDAO {
         // Return -1 if no data or an error occurs
         return -1;
     }
+    
+    public void payForInvoice(int invoiceID, int customerID, double totalPrice) {
+        String query;
+        if(customerID == 0) {
+        query = "UPDATE [Invoice] SET Status = 1, TotalPrice = ?"
+                + " WHERE InvoiceID = ?"; 
+        } else {      
+        query = "UPDATE [Invoice] SET Status = 1, CustomerID=?, TotalPrice = ?"
+                + " WHERE InvoiceID = ?"; 
+        }
+
+        try (Connection connection = DbHelper.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, customerID);
+            statement.setDouble(2, totalPrice);
+            statement.setInt(3, invoiceID);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating invoices by invoiceID.", e);
+        }
+    }
 }

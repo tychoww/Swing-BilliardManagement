@@ -1,6 +1,7 @@
 package View;
 
 import DAO.CategoryDAO;
+import DAO.CustomerDAO;
 import DAO.DishDAO;
 import DAO.InvoiceDAO;
 import DAO.InvoiceDetailDAO;
@@ -8,6 +9,7 @@ import DAO.InvoiceDetailTableDAO;
 import DAO.TableDAO;
 import DTO.Account;
 import DTO.Category;
+import DTO.Customer;
 import DTO.Dish;
 import DTO.Invoice;
 import DTO.InvoiceDetailTable;
@@ -19,15 +21,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.table.DefaultTableModel;
 
@@ -85,14 +84,14 @@ public final class frmTableManager extends javax.swing.JFrame {
 
         jSeparator1 = new javax.swing.JSeparator();
         jPanel4 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
+        txtTotalPriceForInvoice = new javax.swing.JTextField();
+        btnPayForInvoice = new javax.swing.JButton();
+        txtCustomerPhone = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        txtCustomerAddress = new javax.swing.JTextField();
+        txtCustomerName = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         lblSelectedTable = new javax.swing.JLabel();
@@ -128,12 +127,23 @@ public final class frmTableManager extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jTextField1.setEditable(false);
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jTextField1.setText("12120120102");
+        txtTotalPriceForInvoice.setEditable(false);
+        txtTotalPriceForInvoice.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        txtTotalPriceForInvoice.setText("0");
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton2.setText("Thanh toán");
+        btnPayForInvoice.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnPayForInvoice.setText("Thanh toán");
+        btnPayForInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPayForInvoiceActionPerformed(evt);
+            }
+        });
+
+        txtCustomerPhone.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCustomerPhoneFocusLost(evt);
+            }
+        });
 
         jLabel2.setText("Số điện thoại khách hàng:");
 
@@ -154,9 +164,9 @@ public final class frmTableManager extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+                        .addComponent(txtTotalPriceForInvoice, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnPayForInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -164,9 +174,9 @@ public final class frmTableManager extends javax.swing.JFrame {
                             .addComponent(jLabel4))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField4)
-                            .addComponent(jTextField3)
-                            .addComponent(jTextField2))))
+                            .addComponent(txtCustomerName)
+                            .addComponent(txtCustomerAddress)
+                            .addComponent(txtCustomerPhone))))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -174,26 +184,26 @@ public final class frmTableManager extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCustomerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCustomerAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(18, 45, Short.MAX_VALUE)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTotalPriceForInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5))
                         .addGap(22, 22, 22))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPayForInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -251,7 +261,6 @@ public final class frmTableManager extends javax.swing.JFrame {
         jLabel1.setText("Tổng tiền:");
 
         txtTotalPriceForAllPlayTime.setEditable(false);
-        txtTotalPriceForAllPlayTime.setBackground(new java.awt.Color(242, 242, 242));
         txtTotalPriceForAllPlayTime.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txtTotalPriceForAllPlayTime.setText("0");
         txtTotalPriceForAllPlayTime.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -610,34 +619,78 @@ public final class frmTableManager extends javax.swing.JFrame {
             showMessageDialog(null, "Hãy chọn bàn!");
         } else {
             int tableID = tableSelected.getTableID();
-
-            Invoice unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
-
-            if (unpaidInvoice != null) {
-                int invoiceID = unpaidInvoice.getInvoiceID();
-                InvoiceDAO.getInstance().updateInvoiceCheckout(invoiceID);
-                
-                // cập nhật lại unpaidInvoice
-                unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
-                
-                LocalDateTime dateTimeCheckin = unpaidInvoice.getDateCheckin();
-                LocalDateTime dateTimeCheckout = unpaidInvoice.getDateCheckout();
-                txtDateCheckout.setText(DateTimeHelper.formatSqlDateShort(dateTimeCheckout));
-                txtTimeCheckout.setText(DateTimeHelper.formatSqlTimeShort(dateTimeCheckout));
-                
-                if(dateTimeCheckin != null && dateTimeCheckout != null) {
-                    txtTableTiming.setText(DateTimeHelper.calculateDuration(dateTimeCheckin, dateTimeCheckout));
-                    
-                    long minutesPlayed = DateTimeHelper.calculateDurationToMinute(dateTimeCheckin, dateTimeCheckout);
-                    System.out.print(minutesPlayed);
-                    double tablePrice = tableSelected.getPrice();
-                    double totalPriceForAllPlaytime = (double) minutesPlayed / 60 * tablePrice;
-                    
-                    txtTotalPriceForAllPlayTime.setText(String.valueOf(totalPriceForAllPlaytime));
-                }
-            }
+            loadInvoiceDetail(tableID);
         }
     }//GEN-LAST:event_btnCloseTableActionPerformed
+
+    private void txtCustomerPhoneFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCustomerPhoneFocusLost
+        String customerPhoneInput = txtCustomerPhone.getText();
+        Customer foundCustomer = CustomerDAO.getInstance().getCustomerByPhone(customerPhoneInput);
+        if(foundCustomer != null) {
+            showMessageDialog(null, "Đã tìm thấy khách hàng trong hệ thống!");
+            txtCustomerName.setText(foundCustomer.getCustomerName());
+            txtCustomerAddress.setText(foundCustomer.getAddress());
+        }
+    }//GEN-LAST:event_txtCustomerPhoneFocusLost
+
+    private void btnPayForInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayForInvoiceActionPerformed
+        Table tableSelected = (Table) lblSelectedTable.getClientProperty("tag");
+        if(tableSelected == null) {
+            showMessageDialog(null, "Hãy chọn bàn!");
+        }
+        else {
+            int tableID = tableSelected.getTableID();
+            Invoice unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableSelected.getTableID());
+            int invoiceID = unpaidInvoice.getInvoiceID();
+            double totalPrice = Double.parseDouble(txtTotalPriceForInvoice.getText());
+            
+            if(unpaidInvoice.getDateCheckout() == null) {
+                showMessageDialog(null, "Hãy đóng bàn trước khi thanh toán!");
+            } else {        
+                String customerPhoneInput = txtCustomerPhone.getText();
+                String customerNameInput = txtCustomerName.getText();
+                String customerAddressInput = txtCustomerAddress.getText();
+                int customerID = 0;
+
+                Customer foundCustomer = CustomerDAO.getInstance().getCustomerByPhone(customerPhoneInput);
+
+                if(foundCustomer == null) { // The customer does not exist in the system
+                    if(!customerPhoneInput.isEmpty() && !customerNameInput.isEmpty() && !customerAddressInput.isEmpty()) {               
+                        CustomerDAO.getInstance().createCustomer(customerNameInput, customerAddressInput, customerPhoneInput);
+                        customerID = CustomerDAO.getInstance().GetMaxCustomerID();
+                    }
+                }
+                else {
+                    customerID = CustomerDAO.getInstance().getCustomerByPhone(customerPhoneInput).getCustomerID();
+                }
+                // Make payments
+                InvoiceDAO.getInstance().payForInvoice(invoiceID, customerID, totalPrice);
+
+                // updates the state object of the selected table
+                tableSelected.setStatus("available");
+                lblSelectedTable.putClientProperty("tag", tableSelected);
+
+                // Re-update the database
+                TableDAO.getInstance().changeStatusTable(tableID, "available");      
+                // Update the table interface status
+                changeTableStatus(tableID);
+                
+                txtDateCheckin.setText("00/00/0000");
+                txtTimeCheckin.setText("00:00:00");
+                txtDateCheckout.setText("00/00/0000");
+                txtTimeCheckout.setText("00:00:00");
+                txtTableTiming.setText("00:00:00");
+                txtTablePrice.setText("0");
+                txtTotalPriceForAllPlayTime.setText("0");
+                txtCustomerPhone.setText("");
+                txtCustomerName.setText("");
+                txtCustomerAddress.setText("");
+                txtTotalPriceForInvoice.setText("0");
+                
+                loadInvoiceDetail(tableID);
+            }
+        }
+    }//GEN-LAST:event_btnPayForInvoiceActionPerformed
 
     // </editor-fold>
     
@@ -657,19 +710,46 @@ public final class frmTableManager extends javax.swing.JFrame {
 
     // <editor-fold defaultstate="collapsed" desc="InvoiceDetail">
     private void loadInvoiceDetail(int tableID) {
-        List<InvoiceDetailTable> invoiceDetailTableList = InvoiceDetailTableDAO.getInstance().getListInvoiceDetailByTableID(tableID);
+        double totalPriceForInvoice = 0; // Total amount payable for 1 invoice detail
 
+        // Food table
+        List<InvoiceDetailTable> invoiceDetailTableList = InvoiceDetailTableDAO.getInstance().getListInvoiceDetailByTableID(tableID);
         // Create a DefaultTableModel with column names
         DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Tên món", "Số lượng", "Đơn giá", "Thành tiền"}, 0);
-
         // Add data to the DefaultTableModel
         for (InvoiceDetailTable item : invoiceDetailTableList) {
+            totalPriceForInvoice += item.getTotalPrice();
             Object[] rowData = {item.getDishName(), item.getQuantity(), item.getPrice(), item.getTotalPrice()};
             tableModel.addRow(rowData);
         }
-
         // Set the DefaultTableModel to the JTable
         tableInvoiceDetail.setModel(tableModel);
+
+        // Play time table
+        Invoice unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
+        if (unpaidInvoice != null) {
+            Table tableSelected = (Table) lblSelectedTable.getClientProperty("tag");
+            int invoiceID = unpaidInvoice.getInvoiceID();
+            InvoiceDAO.getInstance().updateInvoiceCheckout(invoiceID);
+
+            // cập nhật lại unpaidInvoice
+            unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
+
+            LocalDateTime dateTimeCheckin = unpaidInvoice.getDateCheckin();
+            LocalDateTime dateTimeCheckout = unpaidInvoice.getDateCheckout();
+            txtDateCheckout.setText(DateTimeHelper.formatSqlDateShort(dateTimeCheckout));
+            txtTimeCheckout.setText(DateTimeHelper.formatSqlTimeShort(dateTimeCheckout));
+
+            if (dateTimeCheckin != null && dateTimeCheckout != null) {
+                txtTableTiming.setText(DateTimeHelper.calculateDuration(dateTimeCheckin, dateTimeCheckout));
+
+                long minutesPlayed = DateTimeHelper.calculateDurationToMinute(dateTimeCheckin, dateTimeCheckout);
+                double tablePrice = tableSelected.getPrice();
+                totalPriceForInvoice = totalPriceForInvoice + (double) minutesPlayed / 60 * tablePrice;
+            }
+        }
+
+        txtTotalPriceForInvoice.setText(String.valueOf(totalPriceForInvoice));
     }
     // </editor-fold>
     
@@ -695,9 +775,13 @@ public final class frmTableManager extends javax.swing.JFrame {
                 txtTimeCheckin.setText("00:00:00");
                 txtDateCheckout.setText("00/00/0000");
                 txtTimeCheckout.setText("00:00:00");
-                txtDateCheckout.setText("00/00/0000");
-                txtTimeCheckout.setText("00:00:00");
+                txtTableTiming.setText("00:00:00");
+                txtTablePrice.setText("0");
                 txtTotalPriceForAllPlayTime.setText("0");
+                txtCustomerPhone.setText("");
+                txtCustomerName.setText("");
+                txtCustomerAddress.setText("");
+                txtTotalPriceForInvoice.setText("0");
 
                 // Get the associated Table object from the button's "tag"
                 Table table = (Table) btn.getClientProperty("tag");
@@ -892,10 +976,10 @@ public final class frmTableManager extends javax.swing.JFrame {
     private javax.swing.JButton btnAddDish;
     private javax.swing.JButton btnCloseTable;
     private javax.swing.JButton btnOpenTable;
+    private javax.swing.JButton btnPayForInvoice;
     private javax.swing.JComboBox<CboCategoryItem> cboCategory;
     private javax.swing.JComboBox<CboDishItem> cboDish;
     private javax.swing.JPanel flpTable;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -908,16 +992,15 @@ public final class frmTableManager extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JLabel lblSelectedTable;
     private javax.swing.JMenuItem logoutAccountItem;
     private java.awt.ScrollPane scrollPane1;
     private javax.swing.JSpinner spinDishQuantiy;
     private javax.swing.JTable tableInvoiceDetail;
     private javax.swing.JMenuBar tableManagementMenu;
+    private javax.swing.JTextField txtCustomerAddress;
+    private javax.swing.JTextField txtCustomerName;
+    private javax.swing.JTextField txtCustomerPhone;
     private javax.swing.JFormattedTextField txtDateCheckin;
     private javax.swing.JFormattedTextField txtDateCheckout;
     private javax.swing.JFormattedTextField txtTablePrice;
@@ -925,6 +1008,7 @@ public final class frmTableManager extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField txtTimeCheckin;
     private javax.swing.JFormattedTextField txtTimeCheckout;
     private javax.swing.JFormattedTextField txtTotalPriceForAllPlayTime;
+    private javax.swing.JTextField txtTotalPriceForInvoice;
     private javax.swing.JMenuItem updateAccountItem;
     // End of variables declaration//GEN-END:variables
 }

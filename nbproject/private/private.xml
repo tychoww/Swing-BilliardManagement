@@ -3,7 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Tychow/Documents/NetBeansProjects/JavaApplication1/src/DAO/DishDAO.java</file>
+            <file>file:/C:/Users/Tychow/Documents/NetBeansProjects/JavaApplication1/src/DAO/CustomerDAO.java</file>
+            <file>file:/C:/Users/Tychow/Documents/NetBeansProjects/JavaApplication1/src/View/frmLogin.java</file>
+            <file>file:/C:/Users/Tychow/Documents/NetBeansProjects/JavaApplication1/src/DTO/Table.java</file>
             <file>file:/C:/Users/Tychow/Documents/NetBeansProjects/JavaApplication1/src/View/frmTableManager.java</file>
         </group>
     </open-files>
