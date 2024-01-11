@@ -52,6 +52,19 @@ public class InvoiceDAO {
             throw new RuntimeException("Error updating invoices by tableID.", e);
         }
     }
+    
+    public void updateInvoiceCheckout(int invoiceID) {
+        String query = "UPDATE [Invoice] SET DateCheckout = GETDATE() WHERE InvoiceID = ?";
+
+        try (Connection connection = DbHelper.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, invoiceID);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating invoices by invoiceID.", e);
+        }
+    }
 
     /**
      * Retrieves a list of all invoices in the system.

@@ -52,4 +52,12 @@ public class DateTimeHelper {
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
+    
+    public static long calculateDurationToMinute(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        Duration duration = Duration.between(startDateTime, endDateTime);
+        long hours = duration.toHours();
+        long minutes = duration.toMinutesPart();
+        long totalMinutes = hours * 60 + minutes;
+        return totalMinutes;
+    }
 }

@@ -106,6 +106,8 @@ public final class frmTableManager extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         txtTableTiming = new javax.swing.JFormattedTextField();
         txtTablePrice = new javax.swing.JFormattedTextField();
+        jLabel1 = new javax.swing.JLabel();
+        txtTotalPriceForAllPlayTime = new javax.swing.JFormattedTextField();
         jPanel7 = new javax.swing.JPanel();
         cboCategory = new javax.swing.JComboBox<>();
         cboDish = new javax.swing.JComboBox<>();
@@ -152,7 +154,7 @@ public final class frmTableManager extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -208,6 +210,11 @@ public final class frmTableManager extends javax.swing.JFrame {
         });
 
         btnCloseTable.setText("Đóng bàn");
+        btnCloseTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseTableActionPerformed(evt);
+            }
+        });
 
         txtDateCheckin.setEditable(false);
         txtDateCheckin.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -241,6 +248,14 @@ public final class frmTableManager extends javax.swing.JFrame {
         txtTablePrice.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txtTablePrice.setText("0");
 
+        jLabel1.setText("Tổng tiền:");
+
+        txtTotalPriceForAllPlayTime.setEditable(false);
+        txtTotalPriceForAllPlayTime.setBackground(new java.awt.Color(242, 242, 242));
+        txtTotalPriceForAllPlayTime.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtTotalPriceForAllPlayTime.setText("0");
+        txtTotalPriceForAllPlayTime.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -253,23 +268,27 @@ public final class frmTableManager extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtDateCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTimeCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtTimeCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 239, Short.MAX_VALUE)
+                        .addComponent(txtTimeCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTableTiming, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addComponent(txtTableTiming, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTablePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addComponent(txtTimeCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTablePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(txtDateCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCloseTable, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnCloseTable, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTotalPriceForAllPlayTime))
                 .addContainerGap())
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(310, 310, 310)
@@ -295,7 +314,9 @@ public final class frmTableManager extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(jLabel7)
                     .addComponent(txtTableTiming, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTablePrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTablePrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtTotalPriceForAllPlayTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11))
         );
 
@@ -553,6 +574,7 @@ public final class frmTableManager extends javax.swing.JFrame {
 
             // If unpaidInvoice is null, the table already has an invoice
             if (unpaidInvoice == null) {
+                
                 // Create a new invoice for the table
                 InvoiceDAO.getInstance().createInvoice(tableID);
                 // Obtain the ID of the newly created invoice (Max Invoice ID)
@@ -582,6 +604,41 @@ public final class frmTableManager extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAddDishActionPerformed
 
+    private void btnCloseTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseTableActionPerformed
+        Table tableSelected = (Table) lblSelectedTable.getClientProperty("tag");
+            if (tableSelected == null) {
+            showMessageDialog(null, "Hãy chọn bàn!");
+        } else {
+            int tableID = tableSelected.getTableID();
+
+            Invoice unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
+
+            if (unpaidInvoice != null) {
+                int invoiceID = unpaidInvoice.getInvoiceID();
+                InvoiceDAO.getInstance().updateInvoiceCheckout(invoiceID);
+                
+                // cập nhật lại unpaidInvoice
+                unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
+                
+                LocalDateTime dateTimeCheckin = unpaidInvoice.getDateCheckin();
+                LocalDateTime dateTimeCheckout = unpaidInvoice.getDateCheckout();
+                txtDateCheckout.setText(DateTimeHelper.formatSqlDateShort(dateTimeCheckout));
+                txtTimeCheckout.setText(DateTimeHelper.formatSqlTimeShort(dateTimeCheckout));
+                
+                if(dateTimeCheckin != null && dateTimeCheckout != null) {
+                    txtTableTiming.setText(DateTimeHelper.calculateDuration(dateTimeCheckin, dateTimeCheckout));
+                    
+                    long minutesPlayed = DateTimeHelper.calculateDurationToMinute(dateTimeCheckin, dateTimeCheckout);
+                    System.out.print(minutesPlayed);
+                    double tablePrice = tableSelected.getPrice();
+                    double totalPriceForAllPlaytime = (double) minutesPlayed / 60 * tablePrice;
+                    
+                    txtTotalPriceForAllPlayTime.setText(String.valueOf(totalPriceForAllPlaytime));
+                }
+            }
+        }
+    }//GEN-LAST:event_btnCloseTableActionPerformed
+
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Methods">
@@ -597,31 +654,7 @@ public final class frmTableManager extends javax.swing.JFrame {
         adminTableItem.setEnabled("admin".equals(role));
     }
     // </editor-fold>
-    
-    // <editor-fold defaultstate="collapsed" desc="Invoice">
-    /**
-     * Reset the date and time fields on the interface.
-     * 
-     * @param checkin  If true, reset the check-in date and time fields.
-     * @param checkout If true, reset the check-out date and time fields.
-     * @param during   If true, reset both check-in and check-out date and time fields.
-     */
-    private void resetDateField(boolean checkin, boolean checkout, boolean during) {
-        if (checkin) {
-            txtDateCheckin.setText("00/00/0000");
-            txtTimeCheckin.setText("00:00:00");
-        }
-        if (checkout) {
-            txtDateCheckout.setText("00/00/0000");
-            txtTimeCheckout.setText("00:00:00");
-        }
-        if (during) {
-            txtDateCheckout.setText("00/00/0000");
-            txtTimeCheckout.setText("00:00:00");
-        }
-    }
-    // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="InvoiceDetail">
     private void loadInvoiceDetail(int tableID) {
         List<InvoiceDetailTable> invoiceDetailTableList = InvoiceDetailTableDAO.getInstance().getListInvoiceDetailByTableID(tableID);
@@ -658,7 +691,13 @@ public final class frmTableManager extends javax.swing.JFrame {
             // Add ActionListener to handle button click events
             btn.addActionListener((ActionEvent e) -> {
                 // Reset display fields
-                resetDateField(true, true, true);
+                txtDateCheckin.setText("00/00/0000");
+                txtTimeCheckin.setText("00:00:00");
+                txtDateCheckout.setText("00/00/0000");
+                txtTimeCheckout.setText("00:00:00");
+                txtDateCheckout.setText("00/00/0000");
+                txtTimeCheckout.setText("00:00:00");
+                txtTotalPriceForAllPlayTime.setText("0");
 
                 // Get the associated Table object from the button's "tag"
                 Table table = (Table) btn.getClientProperty("tag");
@@ -686,9 +725,19 @@ public final class frmTableManager extends javax.swing.JFrame {
                     }
                     if (dateTimeCheckin != null && dateTimeCheckout != null) {
                         txtTableTiming.setText(DateTimeHelper.calculateDuration(dateTimeCheckin, dateTimeCheckout));
+                        
+                        long minutesPlayed = DateTimeHelper.calculateDurationToMinute(dateTimeCheckin, dateTimeCheckout);
+                        double tablePrice = table.getPrice();
+                        double totalPriceForAllPlaytime = (double) minutesPlayed / 60 * tablePrice;
+                        txtTotalPriceForAllPlayTime.setText(String.valueOf(totalPriceForAllPlaytime));
                     }
                     if (dateTimeCheckin != null && dateTimeCheckout == null) {
                         txtTableTiming.setText(DateTimeHelper.calculateDuration(dateTimeCheckin, LocalDateTime.now()));
+                        
+                        long minutesPlayed = DateTimeHelper.calculateDurationToMinute(dateTimeCheckin, LocalDateTime.now());
+                        double tablePrice = table.getPrice();
+                        double totalPriceForAllPlaytime = (double) minutesPlayed / 60 * tablePrice;
+                        txtTotalPriceForAllPlayTime.setText(String.valueOf(totalPriceForAllPlaytime));
                     }
                 }
                 
@@ -847,6 +896,7 @@ public final class frmTableManager extends javax.swing.JFrame {
     private javax.swing.JComboBox<CboDishItem> cboDish;
     private javax.swing.JPanel flpTable;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -874,6 +924,7 @@ public final class frmTableManager extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField txtTableTiming;
     private javax.swing.JFormattedTextField txtTimeCheckin;
     private javax.swing.JFormattedTextField txtTimeCheckout;
+    private javax.swing.JFormattedTextField txtTotalPriceForAllPlayTime;
     private javax.swing.JMenuItem updateAccountItem;
     // End of variables declaration//GEN-END:variables
 }
