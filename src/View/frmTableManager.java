@@ -4,11 +4,13 @@ import DAO.CategoryDAO;
 import DAO.DishDAO;
 import DAO.InvoiceDAO;
 import DAO.InvoiceDetailDAO;
+import DAO.InvoiceDetailTableDAO;
 import DAO.TableDAO;
 import DTO.Account;
 import DTO.Category;
 import DTO.Dish;
 import DTO.Invoice;
+import DTO.InvoiceDetailTable;
 import DTO.Table;
 import Helpers.CboCategoryItem;
 import Helpers.CboDishItem;
@@ -27,6 +29,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
+import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -575,6 +578,7 @@ public final class frmTableManager extends javax.swing.JFrame {
             TableDAO.getInstance().changeStatusTable(tableID, "occupied"); 
             // Update the status in the interface
             changeTableStatus(tableID);
+            loadInvoiceDetail(tableID);
         }
     }//GEN-LAST:event_btnAddDishActionPerformed
 
@@ -615,6 +619,24 @@ public final class frmTableManager extends javax.swing.JFrame {
             txtDateCheckout.setText("00/00/0000");
             txtTimeCheckout.setText("00:00:00");
         }
+    }
+    // </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="InvoiceDetail">
+    private void loadInvoiceDetail(int tableID) {
+        List<InvoiceDetailTable> invoiceDetailTableList = InvoiceDetailTableDAO.getInstance().getListInvoiceDetailByTableID(tableID);
+
+        // Create a DefaultTableModel with column names
+        DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Tên món", "Số lượng", "Đơn giá", "Thành tiền"}, 0);
+
+        // Add data to the DefaultTableModel
+        for (InvoiceDetailTable item : invoiceDetailTableList) {
+            Object[] rowData = {item.getDishName(), item.getQuantity(), item.getPrice(), item.getTotalPrice()};
+            tableModel.addRow(rowData);
+        }
+
+        // Set the DefaultTableModel to the JTable
+        tableInvoiceDetail.setModel(tableModel);
     }
     // </editor-fold>
     
@@ -669,6 +691,8 @@ public final class frmTableManager extends javax.swing.JFrame {
                         txtTableTiming.setText(DateTimeHelper.calculateDuration(dateTimeCheckin, LocalDateTime.now()));
                     }
                 }
+                
+                loadInvoiceDetail(table.getTableID());
             });
 
             // Customize button appearance based on table status
