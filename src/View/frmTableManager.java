@@ -22,6 +22,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -118,6 +120,8 @@ public final class frmTableManager extends javax.swing.JFrame {
         tableInvoiceDetail = new javax.swing.JTable();
         tableManagementMenu = new javax.swing.JMenuBar();
         adminTableItem = new javax.swing.JMenu();
+        dishManagementItem = new javax.swing.JMenuItem();
+        revenueManagementItem = new javax.swing.JMenuItem();
         accountTableItem = new javax.swing.JMenu();
         updateAccountItem = new javax.swing.JMenuItem();
         logoutAccountItem = new javax.swing.JMenuItem();
@@ -400,6 +404,23 @@ public final class frmTableManager extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tableInvoiceDetail);
 
         adminTableItem.setText("Admin");
+
+        dishManagementItem.setText("Quản lý món ăn");
+        dishManagementItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dishManagementItemActionPerformed(evt);
+            }
+        });
+        adminTableItem.add(dishManagementItem);
+
+        revenueManagementItem.setText("Doanh thu");
+        revenueManagementItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                revenueManagementItemActionPerformed(evt);
+            }
+        });
+        adminTableItem.add(revenueManagementItem);
+
         tableManagementMenu.add(adminTableItem);
 
         accountTableItem.setText("Thông tin tài khoản");
@@ -692,6 +713,26 @@ public final class frmTableManager extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnPayForInvoiceActionPerformed
 
+    private void dishManagementItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dishManagementItemActionPerformed
+        frmDishManagement f = new frmDishManagement();
+
+        // Add a WindowListener to detect when the form is closing
+        f.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                loadCategory();
+            }
+        });
+
+        f.setVisible(true);
+    }//GEN-LAST:event_dishManagementItemActionPerformed
+
+    private void revenueManagementItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revenueManagementItemActionPerformed
+        fromRevenueManagement f = new fromRevenueManagement();
+
+        f.setVisible(true);
+    }//GEN-LAST:event_revenueManagementItemActionPerformed
+
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Methods">
@@ -905,6 +946,9 @@ public final class frmTableManager extends javax.swing.JFrame {
     * Load the list of categories from the database and populate them into the ComboBox.
     */
     private void loadCategory() {
+        // Clear existing items in the ComboBox
+        cboCategory.removeAllItems();
+
         // Step 1: Retrieve the list of categories from the database
         List<Category> categoryList = CategoryDAO.getInstance().getAllCategories();
 
@@ -979,6 +1023,7 @@ public final class frmTableManager extends javax.swing.JFrame {
     private javax.swing.JButton btnPayForInvoice;
     private javax.swing.JComboBox<CboCategoryItem> cboCategory;
     private javax.swing.JComboBox<CboDishItem> cboDish;
+    private javax.swing.JMenuItem dishManagementItem;
     private javax.swing.JPanel flpTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -994,6 +1039,7 @@ public final class frmTableManager extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblSelectedTable;
     private javax.swing.JMenuItem logoutAccountItem;
+    private javax.swing.JMenuItem revenueManagementItem;
     private java.awt.ScrollPane scrollPane1;
     private javax.swing.JSpinner spinDishQuantiy;
     private javax.swing.JTable tableInvoiceDetail;

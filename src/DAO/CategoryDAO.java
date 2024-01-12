@@ -60,4 +60,31 @@ public class CategoryDAO {
 
         return categoryList;
     }
+    
+    /**
+     * Finds and retrieves a category by its ID from the database.
+     *
+     * @param categoryId The ID of the category to retrieve.
+     * @return The Category object corresponding to the specified ID, or null if not found.
+     * @throws RuntimeException if an error occurs while loading category data.
+     */
+    public Category findCategoryById(int categoryId) {
+        String query = "SELECT * FROM [Category] WHERE CategoryID = ?;";
+
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, categoryId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new Category(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding category by ID.", e);
+        }
+
+        return null; // Return null if category with specified ID is not found
+    }
 }
