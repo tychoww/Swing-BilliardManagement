@@ -188,4 +188,25 @@ public class InvoiceDAO {
             throw new RuntimeException("Error updating invoices by invoiceID.", e);
         }
     }
+    
+    public boolean isCheckedOut(int invoiceID) {
+        String query = "SELECT Status FROM [Invoice] WHERE InvoiceID = ?";
+
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, invoiceID);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int status = resultSet.getInt("Status");
+                    return status == 1; // Assuming 1 represents checked out status
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking invoice status.", e);
+        }
+
+        // Return false if no data or an error occurs
+        return false;
+    }
 }

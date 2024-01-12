@@ -640,6 +640,8 @@ public final class frmTableManager extends javax.swing.JFrame {
             showMessageDialog(null, "Hãy chọn bàn!");
         } else {
             int tableID = tableSelected.getTableID();
+            int invoiceID = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID).getInvoiceID();
+            InvoiceDAO.getInstance().updateInvoiceCheckout(invoiceID);
             loadInvoiceDetail(tableID);
         }
     }//GEN-LAST:event_btnCloseTableActionPerformed
@@ -768,25 +770,30 @@ public final class frmTableManager extends javax.swing.JFrame {
 
         // Play time table
         Invoice unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
-        if (unpaidInvoice != null) {
+        if (unpaidInvoice != null) {   
             Table tableSelected = (Table) lblSelectedTable.getClientProperty("tag");
             int invoiceID = unpaidInvoice.getInvoiceID();
-            InvoiceDAO.getInstance().updateInvoiceCheckout(invoiceID);
 
             // cập nhật lại unpaidInvoice
             unpaidInvoice = InvoiceDAO.getInstance().getUnpaidInvoiceByTableID(tableID);
 
             LocalDateTime dateTimeCheckin = unpaidInvoice.getDateCheckin();
             LocalDateTime dateTimeCheckout = unpaidInvoice.getDateCheckout();
+            System.out.println(dateTimeCheckin);
+            System.out.println(dateTimeCheckout);
             txtDateCheckout.setText(DateTimeHelper.formatSqlDateShort(dateTimeCheckout));
             txtTimeCheckout.setText(DateTimeHelper.formatSqlTimeShort(dateTimeCheckout));
 
             if (dateTimeCheckin != null && dateTimeCheckout != null) {
                 txtTableTiming.setText(DateTimeHelper.calculateDuration(dateTimeCheckin, dateTimeCheckout));
 
-                long minutesPlayed = DateTimeHelper.calculateDurationToMinute(dateTimeCheckin, dateTimeCheckout);
-                double tablePrice = tableSelected.getPrice();
-                totalPriceForInvoice = totalPriceForInvoice + (double) minutesPlayed / 60 * tablePrice;
+                double priceForPlaytime = Double.parseDouble(txtTotalPriceForAllPlayTime.getText());
+                totalPriceForInvoice = totalPriceForInvoice + priceForPlaytime;
+            }
+            
+            if(dateTimeCheckout == null) {
+                txtDateCheckout.setText("00/00/0000");
+                txtTimeCheckout.setText("00:00:00");
             }
         }
 
